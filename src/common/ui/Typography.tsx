@@ -16,7 +16,7 @@ export const Typography = ({
   style,
   size = 16,
   color = 'black',
-  weight = '300',
+  weight = '400',
   truncate = 0,
 }: IProps) => (
   <Text
