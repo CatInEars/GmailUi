@@ -63,7 +63,7 @@ const cards: Mail[] = [
     authorName: 'Team Spark',
     message: 'Do you love your inbox?',
     time: '04:54',
-    title: 'How inbox become a hub connected to',
+    title: 'How inbox become a hub connected to your',
   },
   {
     id: nanoid(),

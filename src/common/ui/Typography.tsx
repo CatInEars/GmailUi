@@ -1,8 +1,7 @@
 import React from 'react';
-import {Text, StyleSheet, TextStyle} from 'react-native';
-import {truncater} from '../../modules/truncater';
+import {Text, StyleSheet, TextStyle, TextProps} from 'react-native';
 
-interface IProps {
+interface IProps extends TextProps {
   children?: string;
   style?: TextStyle;
   size?: TextStyle['fontSize'];
@@ -17,9 +16,10 @@ export const Typography = ({
   size = 16,
   color = 'black',
   weight = '400',
-  truncate = 0,
+  ...props
 }: IProps) => (
   <Text
+    {...props}
     style={[
       styles.text,
       style,
@@ -29,7 +29,7 @@ export const Typography = ({
         fontWeight: weight,
       },
     ]}>
-    {truncater(children ?? '', truncate)}
+    {children}
   </Text>
 );
 

@@ -1,10 +1,6 @@
 import React, {useState} from 'react';
-import {
-  StyleSheet,
-  TouchableHighlight,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+// import Ripple from 'react-native-material-ripple';
 import {EmptyStarIcon} from '../../assets/EmptyStarIcon';
 import {FillStarIcon} from '../../assets/FillStarIcon';
 import {Mail} from '../../common/types/Mail';
@@ -19,10 +15,27 @@ export const Card = ({
   title = 'Without title',
 }: Mail) => {
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isRead, setIsRead] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
+  const [selectWithButton, setSelectWithButton] = useState(false);
+
+  const handlePress = () => {
+    // Here not need use setIsSelected(!isSelected) because
+    // we use state trigger in handleAuthorPress() in <AuthorImage />
+    // and it not ruine animation :)
+    setSelectWithButton(!selectWithButton);
+  };
 
   return (
-    <TouchableHighlight pressRetentionOffset={{left: 10}}>
+    <TouchableOpacity
+      onLongPress={handlePress}
+      onPress={() => setIsRead(true)}
+      style={styles.buttonContainer}
+      delayLongPress={300}
+      // rippleSize={2000}
+      // rippleDuration={1500}
+      // rippleCentered
+    >
       <View
         style={[styles.container, styles.row, isSelected && styles.selected]}>
         <View style={styles.leftSide}>
@@ -30,30 +43,33 @@ export const Card = ({
             isSelected={isSelected}
             setIsSelected={setIsSelected}
             authorName={authorName}
+            selectWithButton={selectWithButton}
           />
         </View>
         <View style={[styles.contentContainer, styles.row]}>
           <View style={styles.textContainer}>
             <Typography
-              weight="700"
+              weight={isRead ? '500' : '700'}
               size={18}
               truncate={20}
+              numberOfLines={1}
               style={styles.text}>
               {authorName}
             </Typography>
             <Typography
-              weight="700"
+              weight={isRead ? '500' : '700'}
               size={14}
               truncate={30}
+              numberOfLines={1}
               style={styles.text}>
               {title}
             </Typography>
-            <Typography truncate={32} size={14}>
+            <Typography truncate={32} size={14} numberOfLines={1}>
               {message}
             </Typography>
           </View>
           <View style={styles.rightSide}>
-            <Typography size={14} weight="600">
+            <Typography size={14} weight={isRead ? '500' : '600'}>
               {time}
             </Typography>
             <TouchableOpacity
@@ -64,7 +80,7 @@ export const Card = ({
           </View>
         </View>
       </View>
-    </TouchableHighlight>
+    </TouchableOpacity>
   );
 };
 
@@ -75,6 +91,10 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 16,
   },
+  buttonContainer: {
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
   selected: {
     backgroundColor: GOOGLE_BLUE_LIGHT,
   },
@@ -83,7 +103,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   textContainer: {
-    alignSelf: 'flex-start',
+    flex: 1,
   },
   contentContainer: {
     flex: 1,

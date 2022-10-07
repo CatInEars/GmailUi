@@ -1,4 +1,5 @@
-import React, {useRef, useState} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useEffect, useRef, useState} from 'react';
 import {Animated, StyleSheet, TouchableOpacity} from 'react-native';
 import {CheckIcon} from '../../assets/CheckIcon';
 import {Typography} from '../../common/ui/Typography';
@@ -9,35 +10,46 @@ interface IProps {
   isSelected: boolean;
   setIsSelected: (value: boolean) => void;
   authorName: string;
+  selectWithButton: boolean;
 }
 
 export const AuthorImage = ({
   isSelected,
   setIsSelected,
   authorName,
+  selectWithButton,
 }: IProps) => {
   const [authorColor] = useState(getRandomLightColor());
+  const [firstRender, setIsFirstRender] = useState(true);
 
   const rotate = useRef(new Animated.Value(0)).current;
   const rotateSecond = useRef(new Animated.Value(0)).current;
   const checkAnimate = useRef(new Animated.Value(0)).current;
 
+  useEffect(() => {
+    if (firstRender) {
+      setIsFirstRender(false);
+      return;
+    }
+    handleAuthorPress();
+  }, [selectWithButton]);
+
   const handleAuthorPress = () => {
     if (!isSelected) {
       Animated.timing(rotate, {
         toValue: 1,
-        duration: 150,
+        duration: 300,
         useNativeDriver: false,
       }).start(() => {
         Animated.timing(rotateSecond, {
           toValue: 1,
-          duration: 150,
+          duration: 300,
           useNativeDriver: false,
         }).start(() => {
           Animated.timing(checkAnimate, {
             toValue: 1,
             useNativeDriver: false,
-            duration: 150,
+            duration: 300,
           }).start();
         });
         setIsSelected(!isSelected);
@@ -45,17 +57,17 @@ export const AuthorImage = ({
     } else {
       Animated.timing(checkAnimate, {
         toValue: 0,
-        duration: 150,
+        duration: 300,
         useNativeDriver: false,
       }).start(() => {
         Animated.timing(rotateSecond, {
           toValue: 0,
-          duration: 150,
+          duration: 300,
           useNativeDriver: false,
         }).start(() => {
           Animated.timing(rotate, {
             toValue: 0,
-            duration: 150,
+            duration: 300,
             useNativeDriver: false,
           }).start();
         });
@@ -80,7 +92,7 @@ export const AuthorImage = ({
           }}>
           <TouchableOpacity
             style={[styles.authorImage, {backgroundColor: authorColor}]}
-            onPress={handleAuthorPress}
+            onPress={() => handleAuthorPress()}
             activeOpacity={1}>
             <Typography
               color="white"
@@ -105,7 +117,7 @@ export const AuthorImage = ({
           }}>
           <TouchableOpacity
             style={[styles.authorImage, {backgroundColor: GOOGLE_BLUE}]}
-            onPress={handleAuthorPress}
+            onPress={() => handleAuthorPress()}
             activeOpacity={1}>
             <Animated.View
               style={{
