@@ -1,6 +1,6 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native';
-import {List} from './components/mail/List';
+import {List} from './components/List';
 
 export const App = () => {
   return (

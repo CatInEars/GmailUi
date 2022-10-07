@@ -1,9 +1,9 @@
 import React, {useRef, useState} from 'react';
 import {Animated, StyleSheet, TouchableOpacity} from 'react-native';
-import {CheckIcon} from '../../../assets/CheckIcon';
-import {Typography} from '../../../common/ui/Typography';
-import {GOOGLE_BLUE} from '../../../constants/colors';
-import {getRandomLightColor} from '../../../modules/colors';
+import {CheckIcon} from '../../assets/CheckIcon';
+import {Typography} from '../../common/ui/Typography';
+import {GOOGLE_BLUE} from '../../constants/colors';
+import {getRandomLightColor} from '../../modules/colors';
 
 interface IProps {
   isSelected: boolean;
@@ -19,14 +19,49 @@ export const AuthorImage = ({
   const [authorColor] = useState(getRandomLightColor());
 
   const rotate = useRef(new Animated.Value(0)).current;
+  const rotateSecond = useRef(new Animated.Value(0)).current;
+  const checkAnimate = useRef(new Animated.Value(0)).current;
 
   const handleAuthorPress = () => {
-    Animated.timing(rotate, {
-      toValue: isSelected ? 0 : 1,
-      duration: 250,
-      useNativeDriver: false,
-    }).start();
-    setIsSelected(!isSelected);
+    if (!isSelected) {
+      Animated.timing(rotate, {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: false,
+      }).start(() => {
+        Animated.timing(rotateSecond, {
+          toValue: 1,
+          duration: 150,
+          useNativeDriver: false,
+        }).start(() => {
+          Animated.timing(checkAnimate, {
+            toValue: 1,
+            useNativeDriver: false,
+            duration: 150,
+          }).start();
+        });
+        setIsSelected(!isSelected);
+      });
+    } else {
+      Animated.timing(checkAnimate, {
+        toValue: 0,
+        duration: 150,
+        useNativeDriver: false,
+      }).start(() => {
+        Animated.timing(rotateSecond, {
+          toValue: 0,
+          duration: 150,
+          useNativeDriver: false,
+        }).start(() => {
+          Animated.timing(rotate, {
+            toValue: 0,
+            duration: 150,
+            useNativeDriver: false,
+          }).start();
+        });
+        setIsSelected(!isSelected);
+      });
+    }
   };
 
   return (
@@ -38,14 +73,10 @@ export const AuthorImage = ({
               {
                 rotateY: rotate.interpolate({
                   inputRange: [0, 1],
-                  outputRange: ['0deg', '-180deg'],
+                  outputRange: ['0deg', '90deg'],
                 }),
               },
             ],
-            opacity: rotate.interpolate({
-              inputRange: [0, 1],
-              outputRange: [1, 0],
-            }),
           }}>
           <TouchableOpacity
             style={[styles.authorImage, {backgroundColor: authorColor}]}
@@ -65,22 +96,26 @@ export const AuthorImage = ({
           style={{
             transform: [
               {
-                rotateY: rotate.interpolate({
+                rotateY: rotateSecond.interpolate({
                   inputRange: [0, 1],
-                  outputRange: ['-180deg', '0deg'],
+                  outputRange: ['90deg', '0deg'],
                 }),
               },
             ],
-            opacity: rotate.interpolate({
-              inputRange: [0, 1],
-              outputRange: [0, 1],
-            }),
           }}>
           <TouchableOpacity
             style={[styles.authorImage, {backgroundColor: GOOGLE_BLUE}]}
             onPress={handleAuthorPress}
             activeOpacity={1}>
-            <CheckIcon />
+            <Animated.View
+              style={{
+                opacity: checkAnimate.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, 1],
+                }),
+              }}>
+              <CheckIcon />
+            </Animated.View>
           </TouchableOpacity>
         </Animated.View>
       )}
