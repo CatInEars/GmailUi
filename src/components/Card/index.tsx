@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   rightSide: {
-    alignItems: 'center',
+    alignItems: 'flex-end',
     justifyContent: 'space-between',
   },
   row: {

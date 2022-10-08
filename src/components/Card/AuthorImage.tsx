@@ -38,18 +38,18 @@ export const AuthorImage = ({
     if (!isSelected) {
       Animated.timing(rotate, {
         toValue: 1,
-        duration: 300,
+        duration: 150,
         useNativeDriver: false,
       }).start(() => {
         Animated.timing(rotateSecond, {
           toValue: 1,
-          duration: 300,
+          duration: 150,
           useNativeDriver: false,
         }).start(() => {
           Animated.timing(checkAnimate, {
             toValue: 1,
             useNativeDriver: false,
-            duration: 300,
+            duration: 150,
           }).start();
         });
         setIsSelected(!isSelected);
@@ -57,21 +57,21 @@ export const AuthorImage = ({
     } else {
       Animated.timing(checkAnimate, {
         toValue: 0,
-        duration: 300,
+        duration: 150,
         useNativeDriver: false,
       }).start(() => {
         Animated.timing(rotateSecond, {
           toValue: 0,
-          duration: 300,
+          duration: 150,
           useNativeDriver: false,
         }).start(() => {
           Animated.timing(rotate, {
             toValue: 0,
-            duration: 300,
+            duration: 150,
             useNativeDriver: false,
           }).start();
+          setIsSelected(!isSelected);
         });
-        setIsSelected(!isSelected);
       });
     }
   };

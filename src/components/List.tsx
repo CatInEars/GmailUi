@@ -1,20 +1,41 @@
-import React from 'react';
-import {FlatList, StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import {FlatList, ScrollViewProps, StyleSheet} from 'react-native';
 import {Mail} from '../common/types/Mail';
 import {Typography} from '../common/ui/Typography';
 import {DARK_GRAY} from '../constants/colors';
 import {Card} from './Card';
 import {nanoid} from 'nanoid/non-secure';
+import {FlyButton} from './FlyButton';
 
 interface IProps {
   headline: string;
 }
 
 export const List = ({headline}: IProps) => {
+  const [prevY, setPrevY] = useState(0);
+  const [animateButtonTrigger, setAnimateButtonTrigger] = useState(false);
+
+  const handleScroll: ScrollViewProps['onScroll'] = ({
+    nativeEvent: {
+      contentOffset: {y},
+    },
+  }) => {
+    if (Math.abs(prevY - y) < 140) {
+      return;
+    }
+    setPrevY(y);
+    if (y - prevY > 0) {
+      setAnimateButtonTrigger(true);
+    } else {
+      setAnimateButtonTrigger(false);
+    }
+  };
+
   return (
     <>
       <FlatList
         data={cards}
+        onScroll={handleScroll}
         scrollEnabled
         renderItem={({item}) => <Card {...item} />}
         keyExtractor={({id}) => id}
@@ -29,6 +50,7 @@ export const List = ({headline}: IProps) => {
           </Typography>
         )}
       />
+      <FlyButton animateTrigger={animateButtonTrigger} />
     </>
   );
 };
@@ -106,6 +128,41 @@ const cards: Mail[] = [
     message: 'Дружище, ты видел новое выступление директора?',
     time: 'Oct 3',
     title: 'Очень срочное обращение',
+  },
+  {
+    id: nanoid(),
+    authorName: 'hh.ru',
+    message: 'Здравствуйте, Павел! Вы искали вакансию',
+    time: 'Oct 2',
+    title: 'Павел, новые вакансии (1) по вашему запросу',
+  },
+  {
+    id: nanoid(),
+    authorName: 'hh.ru',
+    message: 'Здравствуйте, Павел! Вы искали вакансию',
+    time: 'Oct 2',
+    title: 'Павел, новые вакансии (1) по вашему запросу',
+  },
+  {
+    id: nanoid(),
+    authorName: 'hh.ru',
+    message: 'Здравствуйте, Павел! Вы искали вакансию',
+    time: 'Oct 2',
+    title: 'Павел, новые вакансии (1) по вашему запросу',
+  },
+  {
+    id: nanoid(),
+    authorName: 'hh.ru',
+    message: 'Здравствуйте, Павел! Вы искали вакансию',
+    time: 'Oct 2',
+    title: 'Павел, новые вакансии (1) по вашему запросу',
+  },
+  {
+    id: nanoid(),
+    authorName: 'hh.ru',
+    message: 'Здравствуйте, Павел! Вы искали вакансию',
+    time: 'Oct 2',
+    title: 'Павел, новые вакансии (1) по вашему запросу',
   },
   {
     id: nanoid(),
